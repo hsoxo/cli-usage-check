@@ -1,0 +1,68 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show Xcode / Swift toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Resolve version from tag
+        id: ver
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          echo "tag=$TAG"         >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Stamp Info.plist with release version
+        run: |
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${{ steps.ver.outputs.version }}" Resources/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${{ steps.ver.outputs.version }}" Resources/Info.plist
+          /usr/libexec/PlistBuddy -c "Print" Resources/Info.plist
+
+      - name: Build .app bundle (release config, ad-hoc signed)
+        run: bash scripts/build-app.sh
+
+      - name: Package DMG
+        run: bash scripts/build-dmg.sh "${{ steps.ver.outputs.version }}"
+
+      - name: Compute SHA256
+        id: hash
+        run: |
+          DMG="build/AI-Usage-Check-${{ steps.ver.outputs.version }}.dmg"
+          shasum -a 256 "$DMG" | tee "$DMG.sha256"
+          echo "sha=$(shasum -a 256 "$DMG" | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.ver.outputs.tag }}
+          name: ${{ steps.ver.outputs.tag }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: |
+            build/AI-Usage-Check-${{ steps.ver.outputs.version }}.dmg
+            build/AI-Usage-Check-${{ steps.ver.outputs.version }}.dmg.sha256
+          body: |
+            ## Install
+            1. Download `AI-Usage-Check-${{ steps.ver.outputs.version }}.dmg`
+            2. Open the DMG and drag **AI Usage Check** into `Applications`
+            3. First launch will be blocked by Gatekeeper (ad-hoc signed). Right-click → Open, or run:
+               ```sh
+               xattr -dr com.apple.quarantine "/Applications/AI Usage Check.app"
+               ```
+
+            **SHA256:** `${{ steps.hash.outputs.sha }}`

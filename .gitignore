@@ -1,0 +1,31 @@
+## macOS
+.DS_Store
+*.swp
+*~
+
+## SwiftPM build artifacts
+.build/
+build/
+Package.resolved
+
+## Xcode user state
+*.xcuserstate
+xcuserdata/
+*.xcuserdatad/
+DerivedData/
+
+## Editors
+.vscode/
+.idea/
+*.iml
+
+## oh-my-claudecode workspace (local agent state)
+.omc/
+
+## Secrets
+*.env
+.env*
+*.pem
+*.p12
+*.cer
+*.mobileprovision
