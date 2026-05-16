@@ -4,18 +4,9 @@ A native macOS menubar app that shows live **5-hour and 7-day quota
 utilization** for both **Claude Code** (Pro/Max) and **Codex CLI**
 (ChatGPT Plus/Pro). Multi-account.
 
-```
-Menu Bar:  ✷ 12%(4h)   ⌬ 49%(3h28m)
-           ✷  4%(2d2h) ⌬ 50%(4d1h)
-
-Dropdown:
-  Claude / Personal
-    5h  ████████░░░░  12% (4h)
-    wk  ██░░░░░░░░░░   4% (2d2h)
-  Codex / Work
-    5h  ███░░░░░░░░░  49% (3h28m)
-    wk  █████░░░░░░░  50% (4d1h)
-```
+<p align="center">
+  <img src="docs/screenshot.png" alt="AI Usage Check menubar + popover" width="420">
+</p>
 
 ## Download
 
