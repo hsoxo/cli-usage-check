@@ -71,9 +71,11 @@ struct MenuBarContent: View {
                 Text("AI Usage")
                     .font(.system(size: 13, weight: .semibold))
                 if let last = state.lastRefreshAt {
-                    Text("Updated \(Formatting.relativeReset(last))")
-                        .font(.system(size: 10))
-                        .foregroundStyle(.tertiary)
+                    TimelineView(.periodic(from: .now, by: 30)) { _ in
+                        Text("Updated \(Formatting.relativePast(last)) · \(Formatting.clockTime(last))")
+                            .font(.system(size: 10))
+                            .foregroundStyle(.tertiary)
+                    }
                 }
             }
             Spacer()

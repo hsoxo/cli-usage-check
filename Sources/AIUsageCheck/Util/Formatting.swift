@@ -15,6 +15,23 @@ enum Formatting {
         return relative.localizedString(for: date, relativeTo: Date())
     }
 
+    /// "5s ago", "2m ago", "1h ago" — for past timestamps like `lastRefreshAt`.
+    static func relativePast(_ date: Date?) -> String {
+        guard let date else { return "—" }
+        let elapsed = -date.timeIntervalSinceNow
+        if elapsed < 5 { return "just now" }
+        return relative.localizedString(for: date, relativeTo: Date())
+    }
+
+    /// "14:23" — short absolute clock time, locale-aware.
+    static func clockTime(_ date: Date?) -> String {
+        guard let date else { return "—" }
+        let f = DateFormatter()
+        f.locale = .autoupdatingCurrent
+        f.dateFormat = "HH:mm"
+        return f.string(from: date)
+    }
+
     /// "14:23", "Mon 09:00"
     static func absoluteReset(_ date: Date?) -> String {
         guard let date else { return "—" }
