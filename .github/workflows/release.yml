@@ -10,7 +10,11 @@ permissions:
 
 jobs:
   release:
-    runs-on: macos-14
+    # macos-15 ships Xcode 16, which has the SwiftUI `\.openSettings`
+    # environment value used by MenuBarContent. Older Xcode 15 toolchains
+    # on macos-14 don't expose it and the build fails with
+    # "generic parameter 'T' could not be inferred".
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
 
