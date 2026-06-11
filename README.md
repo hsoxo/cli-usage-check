@@ -32,6 +32,10 @@ xattr -dr com.apple.quarantine "/Applications/AI Usage Check.app"
 # 1. Compile and bundle into a .app
 bash scripts/build-app.sh
 
+# Optional: produce an Intel-only or universal app from any Mac
+ARCH=x86_64 bash scripts/build-app.sh
+ARCH=universal bash scripts/build-app.sh
+
 # 2. Launch
 open "build/AI Usage Check.app"
 
@@ -44,7 +48,9 @@ bash scripts/build-dmg.sh 0.1.0
 
 The build script runs `swift build -c release`, copies the binary into
 a minimal `.app` bundle with `LSUIElement=YES` (no Dock icon, menubar
-only), then ad-hoc codesigns it. No Xcode project required.
+only), then ad-hoc codesigns it. Set `ARCH` to `arm64`, `x86_64`, or
+`universal` when you need a specific distributable architecture. No
+Xcode project required.
 
 ## First-run setup
 

@@ -24,8 +24,8 @@ jobs:
       - name: swift build (debug)
         run: swift build
 
-      - name: Package .app (release)
-        run: bash scripts/build-app.sh
+      - name: Package universal .app (release)
+        run: ARCH=universal bash scripts/build-app.sh
 
       - name: Confirm bundle exists
         run: |

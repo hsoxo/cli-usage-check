@@ -37,8 +37,8 @@ jobs:
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${{ steps.ver.outputs.version }}" Resources/Info.plist
           /usr/libexec/PlistBuddy -c "Print" Resources/Info.plist
 
-      - name: Build .app bundle (release config, ad-hoc signed)
-        run: bash scripts/build-app.sh
+      - name: Build universal .app bundle (release config, ad-hoc signed)
+        run: ARCH=universal bash scripts/build-app.sh
 
       - name: Package DMG
         run: bash scripts/build-dmg.sh "${{ steps.ver.outputs.version }}"

@@ -3,7 +3,15 @@ import Foundation
 enum CodexClient {
     static let usageURL = URL(string: "https://chatgpt.com/backend-api/wham/usage")!
     /// Mimics the official Codex CLI so the request looks like it came from there.
-    static let userAgent = "codex_cli_rs/0.3.0 (macOS; arm64)"
+    static let userAgent = "codex_cli_rs/0.3.0 (macOS; \(platformArch))"
+
+    #if arch(x86_64)
+    private static let platformArch = "x86_64"
+    #elseif arch(arm64)
+    private static let platformArch = "arm64"
+    #else
+    private static let platformArch = "unknown"
+    #endif
 
     struct WhamResponse: Decodable {
         let plan_type: String?
